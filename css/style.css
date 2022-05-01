@@ -436,6 +436,13 @@ header {
 	background-color: inherit;
 	border-color: inherit;
 }
+.navbar {
+	border-radius: 0;
+	min-height: auto;
+	margin: 0;
+	border: none;
+	padding-bottom: 20px;
+}
 .navbar-brand {
 	padding: 11px 0 0;
 	height: auto;
