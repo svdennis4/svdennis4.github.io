@@ -66,29 +66,7 @@ body {
 	color: #2d2e2e;
 }
 h1, h2, h3, h4, h5, h6 {
-	font-family: 'Raleway', sans-serif; <footer>
-    <div class="container">
-      <div class="col-sm-3"><img src="images/WWCourse-Footer.png" alt="Education World"> </div>
-      <div class="col-sm-5">
-        <div class="contactus">
-          <h2>Contact Us</h2>
-          <ul class="list-ul">
-            <li><i class="fa fa-map-marker"></i>Department of State, 300 E-Block Building, USA</li>
-            <li><i class="fa fa-phone"></i>0800 123 46 0000</li>
-            <li><i class="fa fa-envelope"></i><a href="mailto:support@yourdomain.com">support@yourdomain.com</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="col-sm-4 subscirbe pull-right">
-        <h2>Newsletter</h2>
-        <p class="sub"><span>Subscribe</span> to Our Newsletter to get Important Blog Posts &amp; Inside Scoops:</p>
-        <div class="form">
-          <input type="text" placeholder="Enter your Email" id="exampleInputName" class="form-control first">
-          <input type="text" class="bttn" value="Subscribe">
-        </div>
-      </div>
-    </div>
-  </footer>
+	font-family: 'Raleway', sans-serif;
 	margin-top: 0;
 }
 a {
@@ -169,6 +147,7 @@ i {
 .center {
 	text-align: center;
 }
+
 
 /*
 ================================================
@@ -462,6 +441,7 @@ header {
 	min-height: auto;
 	margin: 0;
 	border: none;
+	padding-bottom: 20px;
 }
 .navbar-brand {
 	padding: 11px 0 0;
@@ -588,7 +568,7 @@ header {
 }
 .banner-wrapper .fade-carousel {
 	position: relative;
-	height: 400px;
+	height: 500px;
 }
 .banner-wrapper .fade-carousel .carousel-inner .item {
 	height: 400px;
@@ -3077,6 +3057,7 @@ footer .contactus {
 }
 
 @media (max-width: 767px) {
+	
 .logo-bar img {
 	height: auto;
 	width: 165px;
