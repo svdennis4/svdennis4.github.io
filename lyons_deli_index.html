@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lyon's Deli</title>
+  <style>
+    :root {
+      --bg: #0e0e10;
+      --bg-soft: #17171b;
+      --panel: rgba(0, 0, 0, 0.58);
+      --text: #f5f1ea;
+      --muted: #d7d1c8;
+      --gold: #e3d316;
+      --gold-soft: #f3e95b;
+      --line: rgba(255, 255, 255, 0.14);
+      --shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+      --max: 1200px;
+      --radius: 24px;
+      --nav-h: 82px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(rgba(5, 5, 8, 0.68), rgba(5, 5, 8, 0.74)),
+        url('store.jpg') center/cover fixed;
+      line-height: 1.55;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(calc(100% - 2rem), var(--max));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      background: rgba(9, 9, 11, 0.82);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .nav {
+      min-height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      font-size: 2.1rem;
+      line-height: 1;
+    }
+
+    .brand-name {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-style: italic;
+      font-size: clamp(1.6rem, 2.2vw, 2.5rem);
+      color: #f7f4ef;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: clamp(0.8rem, 1.4vw, 2rem);
+      list-style: none;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a {
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #fff;
+      position: relative;
+      padding: 0.3rem 0;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -0.25rem;
+      width: 100%;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s ease;
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      transform: scaleX(1);
+    }
+
+    .menu-toggle {
+      display: none;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border-radius: 12px;
+      padding: 0.65rem 0.8rem;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    section {
+      scroll-margin-top: calc(var(--nav-h) + 18px);
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: calc(var(--nav-h) + 3rem) 1rem 4rem;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.32) 35%, rgba(0,0,0,0.72) 100%),
+        radial-gradient(circle at top center, rgba(255, 217, 104, 0.18), transparent 28%);
+    }
+
+    .hero-card {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 920px);
+      text-align: center;
+      padding: clamp(2rem, 6vw, 4.5rem);
+      background: rgba(0, 0, 0, 0.42);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      color: var(--gold);
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1,
+    .section-title {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-weight: 400;
+      line-height: 1.05;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.9rem, 8vw, 5.8rem);
+      margin-bottom: 1rem;
+      text-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+
+    .hero p.lead {
+      max-width: 760px;
+      margin: 0 auto 1.5rem;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.7vw, 1.2rem);
+    }
+
+    .hero-meta {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.9rem;
+      border: 1px solid rgba(227, 211, 22, 0.5);
+      padding: 0.9rem 1.25rem;
+      margin: 1rem 0 1.35rem;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      color: var(--gold-soft);
+      text-transform: uppercase;
+    }
+
+    .hero-address {
+      font-size: 1.05rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #f7f4ef;
+    }
+
+    .section-shell {
+      padding: 6rem 0;
+    }
+
+    .panel {
+      background: rgba(16, 16, 19, 0.86);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 840px;
+      margin: 0 auto 3rem;
+      padding: 0 1rem;
+    }
+
+    .section-title {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      margin-bottom: 0.85rem;
+    }
+
+    .section-rule {
+      width: 120px;
+      height: 8px;
+      margin: 0 auto 1.3rem;
+      border-radius: 999px;
+      background: var(--gold);
+      box-shadow: 0 0 18px rgba(227, 211, 22, 0.32);
+    }
+
+    .section-copy {
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 2rem;
+      align-items: center;
+      padding: clamp(1.5rem, 3vw, 2.5rem);
+    }
+
+    .about-copy {
+      padding: 0.5rem;
+    }
+
+    .about-copy p + p {
+      margin-top: 1rem;
+    }
+
+    .about-gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .gallery-card {
+      border-radius: 20px;
+      overflow: hidden;
+      min-height: 210px;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #111;
+    }
+
+    .gallery-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-card.tall {
+      grid-row: span 2;
+      min-height: 100%;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .menu-column {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 1.5rem;
+    }
+
+    .menu-column h3 {
+      color: var(--gold);
+      font-size: 2rem;
+      font-family: Georgia, 'Times New Roman', serif;
+      margin-bottom: 0.3rem;
+      line-height: 1.05;
+    }
+
+    .menu-note {
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .menu-list {
+      list-style: none;
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .menu-list li {
+      font-size: 1.02rem;
+      color: #f7f3ed;
+    }
+
+    .menu-list small {
+      display: block;
+      margin-top: 0.2rem;
+      color: #d3cdc4;
+    }
+
+    .banquet-wrap {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      min-height: 620px;
+    }
+
+    .banquet-image {
+      min-height: 100%;
+      background:
+        linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.28)),
+        url('store.jpg') center/cover;
+    }
+
+    .banquet-copy {
+      padding: clamp(2rem, 4vw, 4rem);
+      background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.72));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .banquet-copy p {
+      color: var(--muted);
+      margin-bottom: 1rem;
+      font-size: 1.05rem;
+    }
+
+    .highlight {
+      color: var(--gold-soft);
+      font-weight: 800;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 180px;
+      padding: 0.95rem 1.25rem;
+      border-radius: 999px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px rgba(0,0,0,0.25);
+    }
+
+    .btn-primary {
+      background: #fff;
+      color: #111;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #fff;
+    }
+
+    .hours-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .info-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 1.6rem;
+    }
+
+    .info-card h3 {
+      color: var(--gold);
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+
+    .info-card p,
+    .info-card li {
+      color: #f4efe8;
+      font-size: 1.02rem;
+    }
+
+    .info-card ul {
+      list-style: none;
+      display: grid;
+      gap: 0.38rem;
+    }
+
+    .map-embed {
+      border: 0;
+      width: 100%;
+      min-height: 380px;
+      display: block;
+      filter: grayscale(0.08) contrast(1.02);
+    }
+
+    .footer {
+      padding: 2rem 1rem 3rem;
+      text-align: center;
+      color: #cec7bb;
+    }
+
+    .footer .brand-name {
+      font-size: 2rem;
+    }
+
+    @media (max-width: 980px) {
+      .about-grid,
+      .banquet-wrap,
+      .menu-grid,
+      .hours-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .banquet-image {
+        min-height: 340px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      :root {
+        --nav-h: 72px;
+      }
+
+      .menu-toggle {
+        display: inline-flex;
+      }
+
+      .nav {
+        flex-wrap: wrap;
+        padding: 0.7rem 0;
+      }
+
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        background: rgba(10,10,12,0.96);
+        padding: 0.4rem 0 0.8rem;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .hero-meta,
+      .hero-address {
+        letter-spacing: 0.12em;
+      }
+
+      .about-gallery {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-card.tall {
+        grid-row: span 1;
+      }
+
+      .button-row {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#home" aria-label="Lyon's Deli home">
+        <span class="brand-mark"><img src="logo.png"></span>
+        <span class="brand-name">Lyon's Deli</span>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">
+        ☰
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#menu">Our Menu</a></li>
+        <li><a href="#banquets">Catering</a></li>
+        <li><a href="#hours-location">Hours &amp; Location</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-card">
+        <div class="eyebrow">Summer 2026 GRAND OPENING</div>
+        <h1>Lyon's Deli</h1>
+        <p class="lead">
+          Homestyle cooking, ice cream, neighborhood energy, and a welcoming Munhall atmosphere all in one place.
+        </p>
+        <div class="hero-meta">Lyon's Delis &nbsp; | &nbsp; Deli & Ice Cream &nbsp; | &nbsp; Munhall, PA</div>
+        <div class="hero-address">3510 Main St. · Munhall, PA 15120</div>
+      </div>
+    </section>
+
+    <section class="section-shell" id="about">
+      <div class="container panel">
+        <div class="section-header" style="padding-top: 2.75rem;">
+          <h2 class="section-title">About Us</h2>
+          <div class="section-rule"></div>
+          <p class="section-copy">
+            Established in 2026, Lyon's Deli hopes to become a neighborhood favorite for comfort food, ice cream, and quick trip needs.
+            It is the kind of place where regulars feel at home and first-time guests are treated like old friends.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-copy">
+            <p>
+              Built around hospitality, warmth, and familiar flavors, Lyon's Deli brings the local shoppe vibes back to their hometown. The atmosphere is casual, inviting, and full of personality.
+            </p>
+            <p>
+              Whether you are stopping in for a meal, getting a scoop of ice cream, or just grabbing a quick snack, you will feel like you are right at home.
+            </p>
+          </div>
+
+          <div class="about-gallery">
+            <div class="gallery-card tall">
+              <img src="stuffed_cabbage.jpg" alt="stuffed cabbage" />
+            </div>
+            <div class="gallery-card">
+              <img src="ice_cream.avif" alt="ice cream" />
+            </div>
+            <div class="gallery-card">
+              <img src="shoppe.jpeg" alt="convenience store" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell" id="menu">
+      <div class="container panel">
+        <div class="section-header" style="padding-top: 2.75rem;">
+          <h2 class="section-title">Our Menu</h2>
+          <div class="section-rule"></div>
+          <p class="section-copy"><strong>Open from 11-6:30 daily!</strong></p>
+        </div>
+
+        <div class="menu-grid">
+          <article class="menu-column">
+            <h3>Quick Bites</h3>
+            <p class="menu-note">Fast & Shareable</p>
+            <ul class="menu-list">
+              <li>Provolone Sticks - $8</li>
+              <li>Chicken Fingers &amp; Fries</li>
+              <li>Stuffed Banana Peppers</li>
+              <li>Shrimp Basket</li>
+              <li>Soup of the Day<small>Mon - Wedding, Tue - Chicken Tortilla, Wed - Chedder Broccoli, Thurs - Chicken Noodle, Fri - New England Clam Chowder</small></li>
+              <li>Antipasto</li>
+              <li>Wings <small>Buffalo, mild, BBQ, garlic parm, cajun, honey mustard, hot garlic parm</small></li>
+            </ul>
+          </article>
+
+          <article class="menu-column">
+            <h3>Burgers, Sandwiches &amp; Wraps</h3>
+            <p class="menu-note">All served with fries</p>
+            <ul class="menu-list">
+              <li>Hamburger</li>
+              <li>Cheeseburger</li>
+              <li>Bacon Cheese Burger</li>
+              <li>Ruben</li>
+              <li>Grilled Cheese</li>
+              <li>Italian Hoagie</li>
+              <li>Meatball Hoagie</li>
+              <li>Chicken Parmigiana</li>
+              <li>Grilled Chicken Wrap w/ Avacado</li>
+              <li>Hot Dog <small>Chillie & Cheese + $1.50</small></li>
+            </ul>
+          </article>
+
+          <article class="menu-column">
+            <h3>Dinners</h3>
+            <p class="menu-note">House-style Italian plates</p>
+            <ul class="menu-list">
+              <li>Meatloaf & Mashed Potatoes</li>
+              <li>Chicken Parmigiana</li>
+              <li>Stuffed Cabbage</li>
+              <li>Lasagna</li>
+              <li>Spaghetti & Meatballs</li>
+              <li>Potroast</li>
+              <li>Salads <small>Add grilled chicken, breaded chicken, or steak</small></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell" id="banquets">
+      <div class="container panel banquet-wrap">
+        <div class="banquet-image" aria-hidden="true"></div>
+        <div class="banquet-copy">
+          <h2 class="section-title">Catering</h2>
+          <div class="section-rule" style="margin-left: 0;"></div>
+          <p>
+            Lyon's Deli is a great fit for <span class="highlight">graudations, weddings, birthdays, school dances, work functions</span>, and other special events.
+          </p>
+          <p>
+            We offer a great menu with a wide variety that you can pick and choose a la carte to best fit your events needs.
+          </p>
+          <p>
+            Contact the restaurant for catering packages, custom menus, and current availability.
+          </p>
+
+          <div class="button-row">
+            <a class="btn btn-primary" href="#contact">Contact Us</a>
+            <a class="btn btn-secondary" href="#menu">Catering Menu</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell" id="hours-location">
+      <div class="container panel">
+        <div class="section-header" style="padding-top: 2.75rem;">
+          <h2 class="section-title">Hours &amp; Location</h2>
+          <div class="section-rule"></div>
+        </div>
+
+        <div class="hours-grid">
+          <article class="info-card">
+            <h3>Our Location</h3>
+            <p>3510 Main St<br />Munhall, PA 15120</p>
+            <p style="margin-top: 1rem;"><a href="#contact" class="highlight">Map &amp; Directions &gt;</a></p>
+          </article>
+
+          <article class="info-card">
+            <h3>Opening Hours</h3>
+            <ul>
+              <li>Monday: 11am - 6:30pm</li>
+              <li>Tuesday: 11am - 6:30pm</li>
+              <li>Wednesday: 11am - 6:30pm</li>
+              <li>Thursday: 11am - 6:30pm</li>
+              <li>Friday: 10:30am - 7pm</li>
+              <li>Saturday: 10:30am - 7pm</li>
+              <li>Sunday: 10:30am - 6:30pm</li>
+            </ul>
+            <p style="margin-top: 1rem;"><span class="highlight">Kitchen Hours:</span> Everyday 11am - 6:30pm</p>
+          </article>
+
+          <article class="info-card" id="contact">
+            <h3>Contact Us</h3>
+            <p>(555) 555-5555</p>
+            <p style="margin-top: 1rem;">hello@lyonsdeli.com</p>
+          </article>
+        </div>
+
+        <iframe
+          class="map-embed"
+          title="Lyon's Deli Map"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=3510%20Main%20St%2C%20Munhall%2C%20PA%2015120&output=embed">
+        </iframe>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="brand" style="justify-content:center;">
+      <span class="brand-mark"><img src='logo.png'></span>
+      <span class="brand-name">Lyon's Deli</span>
+    </div>
+    <p style="margin-top: 0.8rem;">3510 Main St · Munhall, PA 15120 · (555) 555-5555</p>
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    const links = document.querySelectorAll('.nav-links a');
+    const sections = document.querySelectorAll('main section[id]');
+
+    menuToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const id = entry.target.getAttribute('id');
+        links.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+        });
+      });
+    }, {
+      rootMargin: '-35% 0px -50% 0px',
+      threshold: 0.1
+    });
+
+    sections.forEach(section => observer.observe(section));
+  </script>
+</body>
+</html>
